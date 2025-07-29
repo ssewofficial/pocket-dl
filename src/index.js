@@ -10,25 +10,24 @@ const BASE_URL =
 app.get("/story-titles", async (req, res) => {
   try {
     let curr_ptr = parseInt(req.query.curr_ptr) || 0;
-    let end_ptr = parseInt(req.query.end_ptr) || Infinity
+    let end_ptr = parseInt(req.query.end_ptr) || Infinity;
+    let token = req.query.token;
     let allTitles = [];
     let hasMoreData = true;
 
-    while (hasMoreData & curr_ptr < end_ptr) {
+    while (hasMoreData & (curr_ptr < end_ptr)) {
       const response = await axios.get(`${BASE_URL}${curr_ptr}`, {
         headers: {
           Accept: "application/json, text/plain, */*",
           "accept-encoding": "gzip, deflate, br, zstd",
           "accept-language": "en-US,en;q=0.9",
-          "access-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsImRldmljZV9pZCI6Im1vYmlsZS13ZWIiLCJleHBpcnkiOjE3NTM3NTY3NTIsImlhdCI6MTc1MzU4Mzk1MiwicGxhdGZvcm0iOiJ3ZWItMTdiMmMyNzVjMjc1YzI3NWNjZTNjMjc1Y2NlM2Y1MTc5MWMwZWJmYiIsInJvbGUiOiJMaXN0ZW5lciIsInRlbmFudCI6InBvY2tldF9mbSIsInVpZCI6IiIsInZlcnNpb24iOiJ2MiJ9.CAKhglviLelRoSv-5azKUCyLZT8anoyfo0HaZS7AGRw",
+          "access-token": token,
           "app-client": "consumer-web",
           "app-name": "pocket_fm",
           "app-version": 180,
           "auth-key": "17b2c275c275c275cce3c275cce3f51791c0ebfb",
           "auth-token": "web-auth",
-          authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsImRldmljZV9pZCI6Im1vYmlsZS13ZWIiLCJleHBpcnkiOjE3NTM3NTY3NTIsImlhdCI6MTc1MzU4Mzk1MiwicGxhdGZvcm0iOiJ3ZWItMTdiMmMyNzVjMjc1YzI3NWNjZTNjMjc1Y2NlM2Y1MTc5MWMwZWJmYiIsInJvbGUiOiJMaXN0ZW5lciIsInRlbmFudCI6InBvY2tldF9mbSIsInVpZCI6IiIsInZlcnNpb24iOiJ2MiJ9.CAKhglviLelRoSv-5azKUCyLZT8anoyfo0HaZS7AGRw",
+          authorization: `Bearer ${token}`,
           "device-id": "mobile-web",
           locale: "IN",
           origin: "https://pocketfm.com",
