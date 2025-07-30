@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pocket Fm API Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb;
+      }
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .input-field:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+      }
+      .submit-btn {
+        transition: all 0.2s ease-in-out;
+      }
+      .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3),
+          0 2px 4px -1px rgba(79, 70, 229, 0.1);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-4">
+    <div class="form-container bg-white rounded-lg p-8 w-full">
+      <div class="flex items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Pocket FM API Request</h1>
+      </div>
+
+      <form id="apiForm" class="space-y-6">
+        <!-- Show ID Select -->
+        <div>
+          <label
+            for="showId"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Show ID</label
+          >
+          <select
+            id="showId"
+            name="showId"
+            class="input-field w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            required
+          >
+            <option value="" disabled selected>Select a Show ID</option>
+            <option value="f629196ee7df34287ef2672e91fda9f939e9d02d">
+              Super Yoddha
+            </option>
+            <option value="ec172e7535703658d4720d445803d541ed9ff109">
+              Number Zero
+            </option>
+            <option value="e53bb335e9b796dcf10110e81d936ac1f210989d">
+              Shivam The Hidden Worrier
+            </option>
+          </select>
+        </div>
+
+        <!-- Current Pointer Input -->
+        <div>
+          <label
+            for="curr_ptr"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Current Pointer (curr_ptr)</label
+          >
+          <input
+            type="text"
+            id="curr_ptr"
+            name="curr_ptr"
+            placeholder="Enter current pointer value"
+            class="input-field w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+          />
+        </div>
+
+        <!-- End Pointer Input -->
+        <div>
+          <label
+            for="end_ptr"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >End Pointer (end_ptr)</label
+          >
+          <input
+            type="text"
+            id="end_ptr"
+            name="end_ptr"
+            placeholder="Enter end pointer value"
+            class="input-field w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+          />
+        </div>
+
+        <!-- Token Input -->
+        <div>
+          <label
+            for="token"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Token</label
+          >
+          <input
+            type="text"
+            id="token"
+            name="token"
+            placeholder="Enter token value"
+            class="input-field w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+          />
+        </div>
+
+        <!-- Fields Selection -->
+        <div>
+          <label
+            for="fields"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Select Fields</label
+          >
+          <select
+            id="fields"
+            name="fields"
+            multiple
+            class="input-field w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+          >
+            <option value="story_title">Story Title</option>
+            <option value="show_id">Show ID</option>
+            <option value="create_time">Create Time</option>
+            <option value="image_url">Image URL</option>
+            <option value="duration">Duration</option>
+            <option value="status">Status</option>
+            <option value="is_ugc">Is UGC</option>
+            <option value="seq_number">Sequence Number</option>
+            <option value="video_url">Video URL</option>
+            <option value="story_id">Story ID</option>
+            <option value="description">Description</option>
+            <option value="user_info">User Info</option>
+            <option value="stats">Stats</option>
+            <option value="media_meta_data">Media Meta Data</option>
+            <option value="story_type">Story Type</option>
+            <option value="media_url_enc">Media Url Encoding</option>
+            <option value="media_url_enc_fairplay">Media Url Encoding Fairplay</option>
+            <option value="media_url_enc_std">Media Url Encoding Std</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <button
+            type="submit"
+            class="submit-btn px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Generate API URL
+          </button>
+        </div>
+      </form>
+
+      <!-- Result Section -->
+      <!-- <div id="resultContainer" class="mt-8 hidden">
+        <div class="bg-gray-50 p-4 rounded-md">
+          <h2 class="text-lg font-medium text-gray-800 mb-2">Your API URL:</h2>
+          <div class="flex items-center">
+            <input
+              id="apiUrl"
+              type="text"
+              readonly
+              class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-white text-gray-700 font-mono text-sm"
+            />
+            <button
+              onclick="copyToClipboard()"
+              class="px-3 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700"
+            >
+              Copy
+            </button>
+          </div>
+          <div class="mt-4">
+            <a
+              id="apiLink"
+              href="#"
+              target="_blank"
+              class="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+            >
+              Test this URL directly
+            </a>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <script>
+      document
+        .getElementById("apiForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form values
+          const showId = document.getElementById("showId").value.trim();
+          const currPtr = document.getElementById("curr_ptr").value.trim();
+          const endPtr = document.getElementById("end_ptr").value.trim();
+          const token = document.getElementById("token").value.trim();
+          const fields = Array.from(
+            document.getElementById("fields").selectedOptions
+          ).map((option) => option.value);
+
+          // Validate required field
+          if (!showId) {
+            alert("Please select a Show ID");
+            return;
+          }
+
+          // Construct the query parameters
+          let queryParams = [];
+          if (currPtr) queryParams.push(`curr_ptr=${currPtr}`);
+          if (endPtr) queryParams.push(`end_ptr=${endPtr}`);
+          if (token) queryParams.push(`token=${token}`);
+          if (fields.length > 0) queryParams.push(`fields=${fields.join(",")}`);
+
+          // Build the complete URL
+          let baseUrl = `/show/${showId}/titles`;
+          if (queryParams.length > 0) {
+            baseUrl += `?${queryParams.join("&")}`;
+          }
+
+          // Display the result
+          // document.getElementById("apiUrl").value = baseUrl;
+          // document.getElementById("apiLink").href = baseUrl;
+          // document.getElementById("resultContainer").classList.remove("hidden");
+
+          // // Optional: Scroll to result
+          // document
+          //   .getElementById("resultContainer")
+          //   .scrollIntoView({ behavior: "smooth" });
+
+          window.location.href = baseUrl
+        });
+
+      // function copyToClipboard() {
+      //   const urlInput = document.getElementById("apiUrl");
+      //   urlInput.select();
+      //   document.execCommand("copy");
+
+      //   // Visual feedback
+      //   const copyBtn = document.querySelector("#resultContainer button");
+      //   const originalText = copyBtn.textContent;
+      //   copyBtn.textContent = "Copied!";
+      //   setTimeout(() => {
+      //     copyBtn.textContent = originalText;
+      //   }, 2000);
+      // }
+    </script>
+  </body>
+</html>

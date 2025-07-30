@@ -1,22 +1,32 @@
 const express = require("express");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
 const PORT = 3000;
 
-const BASE_URL =
-  "https://api.pocketfm.com/v2/content_api/show.get_episodes?show_id=f629196ee7df34287ef2672e91fda9f939e9d02d&curr_ptr=";
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.get("/story-titles", async (req, res) => {
+// Function to construct the API URL
+function getUrl(showId, currPtr) {
+  return `https://api.pocketfm.com/v2/content_api/show.get_episodes?show_id=${showId}&curr_ptr=${currPtr}`;
+}
+
+// Endpoint to fetch titles
+app.get("/show/:showId/titles", async (req, res) => {
   try {
     let curr_ptr = parseInt(req.query.curr_ptr) || 0;
     let end_ptr = parseInt(req.query.end_ptr) || Infinity;
     let token = req.query.token;
+    let fields = req.query.fields ? req.query.fields.split(",") : [];
+
     let allTitles = [];
     let hasMoreData = true;
 
-    while (hasMoreData & (curr_ptr < end_ptr)) {
-      const response = await axios.get(`${BASE_URL}${curr_ptr}`, {
+    while (hasMoreData && curr_ptr < end_ptr) {
+      const url = getUrl(req.params.showId, curr_ptr); // Construct the URL with the current pointer
+      const response = await axios.get(url, {
         headers: {
           Accept: "application/json, text/plain, */*",
           "accept-encoding": "gzip, deflate, br, zstd",
@@ -46,21 +56,46 @@ app.get("/story-titles", async (req, res) => {
       const data = response.data;
 
       if (data.status === 1 && data.result && data.result.stories) {
-        const titles = data.result.stories.map((story) => story.story_title);
-        allTitles = allTitles.concat(titles);
-        curr_ptr += 10;
+        const titles = data.result.stories.map((story) => {
+          if (fields.length === 0) {
+            return story.story_title; // Return only the title if no fields are selected
+          }
+          return fields.reduce((acc, field) => {
+            acc[field] = story[field];
+            return acc;
+          }, {});
+        });
+
+        // If no fields are selected, ensure titles are unique
+        if (fields.length === 0) {
+          titles.forEach((title) => {
+            if (!allTitles.includes(title)) {
+              allTitles.push(title);
+            }
+          });
+        } else {
+          allTitles = allTitles.concat(titles);
+        }
+
+        curr_ptr += 10; // Increment the pointer for the next batch
       } else {
-        hasMoreData = false;
+        hasMoreData = false; // Stop if no more data is available
       }
     }
 
-    res.json(allTitles);
+    res.json(allTitles); // Send the collected titles as the response
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ error: "Failed to fetch story titles" });
   }
 });
 
+// Serve the HTML file on the root route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
