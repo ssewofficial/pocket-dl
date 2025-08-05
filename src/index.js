@@ -14,7 +14,7 @@ function getUrl(showId, currPtr) {
 }
 
 // Endpoint to fetch titles
-app.get("/show/:showId/titles", async (req, res) => {
+app.get("/show/:showId/episode", async (req, res) => {
   try {
     let curr_ptr = parseInt(req.query.curr_ptr) || 0;
     let end_ptr = parseInt(req.query.end_ptr) || Infinity;
